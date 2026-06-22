@@ -562,8 +562,10 @@ background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:
 @property --pb-float{syntax:'<length>';inherits:false;initial-value:0px}
 @property --pb-hover{syntax:'<length>';inherits:false;initial-value:0px}
 .price-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;margin-top:52px;perspective:1800px;perspective-origin:50% 45%;max-width:760px;margin-left:auto;margin-right:auto}
+.price-grid.price-grid-single{grid-template-columns:1fr;max-width:460px;perspective:none}
+.price-grid.price-grid-single>.pkg-col{--pb-rot:0deg;--pb-base-y:0px;--pb-scale:1;transform:none!important;animation:none!important}
 
-/* === PKG-COL — wraps green handle (pkg-boost) + price-box as one tilted stack === */
+/* === PKG-COL — wraps the price-box (tilted in multi-column, flat when single) === */
 .pkg-col{
   --pb-rot:0deg;--pb-base-y:0px;--pb-float:0px;--pb-hover:0px;--pb-scale:1;
   display:flex;flex-direction:column;align-items:stretch;
@@ -627,8 +629,6 @@ box-shadow:
 .price-orig{font-family:'Inter',sans-serif;font-size:15px;font-weight:300;color:rgba(242,237,228,.28);text-decoration:line-through;margin-bottom:6px;letter-spacing:.02em}
 .price-total{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,58px);font-weight:500;color:var(--ink);line-height:1}
 .price-unit{font-family:'Inter',sans-serif;font-size:14px;font-weight:300;color:var(--muted);display:block;margin-top:8px}
-.price-ribbon{position:absolute;top:0;left:36px;background:var(--gold);color:#1a1410;font-family:'Inter',sans-serif;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;padding:6px 16px;border-radius:0 0 10px 10px;z-index:2}
-.ribbon-muted{background:rgba(212,168,75,.22);color:rgba(242,237,228,.7);letter-spacing:.18em}
 .sec-sublead{max-width:580px;margin:-20px auto 48px;font-size:14px;line-height:1.75;color:var(--muted);text-align:center}
 @media(max-width:700px){.sec-sublead{font-size:13px;margin-bottom:36px}}
 
@@ -641,181 +641,6 @@ box-shadow:
 .pi::before{content:'·';color:var(--gold);font-size:16px;flex-shrink:0;line-height:1.2;margin-top:1px}
 .pi.hi{color:rgba(242,237,228,.9);font-weight:500}
 
-/* Per-paket Reach Boost — green "handle" container ABOVE the price-card. */
-.pkg-boost{
-  width:100%;
-  display:flex;flex-direction:column;
-  background:rgba(8,68,36,.42);
-  border:1px solid rgba(212,168,75,.18);
-  border-radius:18px;
-  color:var(--ink);font-family:'Inter',sans-serif;
-  text-align:left;
-  position:relative;
-  margin-bottom:18px;
-  z-index:2;
-  transition:background .35s var(--ease),border-color .35s var(--ease),box-shadow .35s var(--ease);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
-}
-.pkg-boost:hover{
-  background:rgba(12,90,48,.55);
-  border-color:rgba(212,168,75,.32);
-}
-.pkg-boost[aria-pressed="true"]{
-  background:rgba(12,90,48,.62);
-  border-color:rgba(212,168,75,.42);
-  box-shadow:0 -6px 24px rgba(52,199,89,.1),inset 0 1px 0 rgba(255,255,255,.06);
-}
-/* Header row — always visible — switch + tag + title + price. */
-.pkg-boost-head{
-  display:flex;align-items:flex-start;gap:14px;
-  padding:14px 18px;
-  width:100%;
-  background:transparent;border:0;
-  font:inherit;color:inherit;
-  cursor:pointer;text-align:left;
-  border-radius:18px 18px 0 0;
-  transition:background .25s var(--ease);
-}
-.pkg-boost-head:hover{background:rgba(255,255,255,.02)}
-.pkg-boost-head:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
-.pkg-boost-switch{
-  width:38px;height:22px;flex-shrink:0;margin-top:2px;
-  background:rgba(120,120,128,.32);border-radius:100px;
-  position:relative;transition:background-color .3s ease;
-}
-.pkg-boost-switch::after{
-  content:'';position:absolute;top:2px;left:2px;
-  width:18px;height:18px;background:#fff;border-radius:50%;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:0 2px 6px rgba(0,0,0,.2),0 0 0 .5px rgba(0,0,0,.04);
-}
-.pkg-boost[aria-pressed="true"] .pkg-boost-switch{background:#34C759}
-.pkg-boost[aria-pressed="true"] .pkg-boost-switch::after{transform:translateX(16px)}
-.pkg-boost-text{display:flex;flex-direction:column;gap:5px;flex:1;min-width:0}
-.pkg-boost-tag{
-  align-self:flex-start;
-  font-family:'Inter',sans-serif;font-size:9px;font-weight:600;
-  letter-spacing:.22em;text-transform:uppercase;
-  padding:3px 9px;margin-bottom:3px;
-  border-radius:100px;
-  background:rgba(212,168,75,.08);
-  border:1px solid rgba(212,168,75,.22);
-  color:rgba(242,237,228,.55);
-  transition:background .35s var(--ease),border-color .35s var(--ease),color .35s var(--ease);
-}
-.pkg-boost-tag em{font-style:normal;color:var(--gold);font-weight:700}
-.pkg-boost:hover .pkg-boost-tag{background:rgba(212,168,75,.16);border-color:rgba(212,168,75,.4)}
-.pkg-boost[aria-pressed="true"] .pkg-boost-tag{background:rgba(52,199,89,.14);border-color:rgba(52,199,89,.35);color:rgba(242,237,228,.85)}
-.pkg-boost[aria-pressed="true"] .pkg-boost-tag em{color:#5ed47a}
-.pkg-boost-title{
-  font-size:13px;font-weight:600;letter-spacing:.015em;color:var(--ink);
-  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
-  transition:color .35s var(--ease);
-}
-.pkg-boost[aria-pressed="true"] .pkg-boost-title{color:var(--gold)}
-.pkg-boost-price{
-  font-size:11px;font-weight:600;color:var(--gold);
-  letter-spacing:.06em;text-transform:uppercase;
-  display:inline-block;
-  transition:opacity .3s var(--ease);
-}
-.pkg-boost-price.is-zero{opacity:.4}
-.pkg-boost[aria-pressed="false"] .pkg-boost-price{display:none}
-
-/* Collapsible body — desc + per-card slider */
-.pkg-boost-body{
-  display:grid;
-  grid-template-rows:0fr;
-  transition:grid-template-rows .55s cubic-bezier(.45,.05,.55,.95);
-  width:100%;
-}
-.pkg-boost[aria-pressed="true"] .pkg-boost-body{
-  grid-template-rows:1fr;
-}
-.pkg-boost-body-inner{
-  overflow:hidden;
-  min-height:0;
-  padding:0 18px;
-}
-.pkg-boost-desc{
-  font-size:12px;color:rgba(242,237,228,.55);
-  line-height:1.55;letter-spacing:.005em;
-  margin:0;padding:0 0 14px;
-  transition:color .35s var(--ease);
-}
-.pkg-boost[aria-pressed="true"] .pkg-boost-desc{color:rgba(242,237,228,.78)}
-.pkg-boost-stat{
-  color:var(--gold);font-weight:600;letter-spacing:.015em;
-  white-space:nowrap;
-}
-.pkg-boost[aria-pressed="true"] .pkg-boost-stat{
-  text-shadow:0 0 18px rgba(212,168,75,.35);
-}
-
-/* Per-card budget slider — inside expanded green box */
-.pkg-slider{
-  padding:14px 0 16px;
-  border-top:1px solid rgba(212,168,75,.14);
-}
-.pkg-slider-lbl{
-  display:block;
-  font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;
-  letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(212,168,75,.78);
-  margin-bottom:12px;
-}
-.pkg-range{
-  -webkit-appearance:none;appearance:none;width:100%;height:22px;
-  background:transparent;outline:0;cursor:pointer;margin:0;
-}
-.pkg-range::-webkit-slider-runnable-track{height:4px;border-radius:99px;
-  background:linear-gradient(to right,var(--gold) 0%,var(--gold) var(--pk-fill,33%),rgba(212,168,75,.18) var(--pk-fill,33%),rgba(212,168,75,.18) 100%)}
-.pkg-range::-moz-range-track{height:4px;border-radius:99px;background:rgba(212,168,75,.18)}
-.pkg-range::-moz-range-progress{height:4px;border-radius:99px;background:var(--gold)}
-.pkg-range::-webkit-slider-thumb{
-  -webkit-appearance:none;appearance:none;
-  width:18px;height:18px;border-radius:50%;
-  background:var(--gold);
-  margin-top:-7px;
-  cursor:grab;
-  border:2px solid #1a1410;
-  box-shadow:0 3px 10px rgba(0,0,0,.45),0 0 14px rgba(212,168,75,.45);
-  transition:transform .2s var(--ease),box-shadow .2s var(--ease);
-}
-.pkg-range::-moz-range-thumb{
-  width:18px;height:18px;border-radius:50%;
-  background:var(--gold);cursor:grab;border:2px solid #1a1410;
-  box-shadow:0 3px 10px rgba(0,0,0,.45),0 0 14px rgba(212,168,75,.45);
-}
-.pkg-range:hover::-webkit-slider-thumb{transform:scale(1.12);box-shadow:0 4px 14px rgba(0,0,0,.55),0 0 18px rgba(212,168,75,.6)}
-.pkg-range:active::-webkit-slider-thumb{transform:scale(1.22);cursor:grabbing}
-.pkg-ticks{
-  display:flex;justify-content:space-between;
-  margin-top:8px;padding:0 1px;
-  font-family:'Inter',sans-serif;font-size:9.5px;font-weight:500;
-  letter-spacing:.06em;color:rgba(242,237,228,.4);
-  font-feature-settings:"tnum";
-}
-.pkg-tick{
-  display:inline-flex;flex-direction:column;align-items:center;gap:4px;
-  cursor:pointer;
-  transition:color .25s var(--ease);
-  position:relative;padding-top:2px;
-}
-.pkg-tick::before{
-  content:'';position:absolute;top:-9px;
-  width:1px;height:5px;background:rgba(212,168,75,.25);
-}
-.pkg-tick.is-active{color:var(--gold);font-weight:700}
-.pkg-tick.is-active::before{background:var(--gold);width:2px;box-shadow:0 0 8px rgba(212,168,75,.6)}
-.pkg-tick:hover{color:rgba(242,237,228,.75)}
-
-@media(max-width:560px){
-  .pkg-boost-head{gap:11px;padding:12px 14px}
-  .pkg-boost-body-inner{padding:0 14px}
-  .pkg-boost-title{font-size:12px}
-  .pkg-boost-desc{font-size:11px}
-}
 @media(max-width:700px){
   .price-grid{grid-template-columns:1fr;perspective:none;max-width:none}
   .pkg-col,.price-grid>.pkg-col:first-child,.price-grid>.pkg-col:last-child{--pb-rot:0deg;--pb-base-y:0px;--pb-scale:1;transform:none!important}
@@ -1163,26 +988,26 @@ position:relative;overflow:hidden;transition:color .35s}
 
       <div class="sp-c rv d1">
         <p class="sp-eyebrow">Spår 01</p>
-        <h3>Bästsäljaren i centrum</h3>
+        <h3>Den vackraste asken i centrum</h3>
         <p class="sp-sub">Lyfter fram: Kolor BLOMMA 12 bitar</p>
-        <p class="sp-body">Er #1-bästsäljare i fokus, vävd in i Villa Sjöviks styling och känsla. Affärsmålet är att göra er mest sålda ask till ett igenkännbart hjälte-objekt hos en köpstark publik som inte redan är era kunder. Spåret som flyttar volym på det ni redan vet säljer &mdash; lägst risk, tydligast avkastning.</p>
-        <span class="sp-tag">Bästsäljare &middot; volym &middot; trygghet</span>
+        <p class="sp-body">Er mest fotogeniska ask &mdash; blomformen i choklad, passion och salt karamell &mdash; vävd in i Villa Sjöviks styling och känsla. Affärsmålet är att göra den till ett igenkännbart hjälte-objekt hos en köpstark publik som inte redan är era kunder. En ask som är gjord för bild gör jobbet av sig själv &mdash; lägst risk, tydligast avkastning.</p>
+        <span class="sp-tag">Estetik &middot; presentköp &middot; igenkänning</span>
       </div>
 
       <div class="sp-c rv d2">
         <p class="sp-eyebrow">Spår 02</p>
-        <h3>Hej Solsken medan efterfrågan är het</h3>
-        <p class="sp-sub">Lyfter fram: Hej Solsken-sommarkollektionen</p>
-        <p class="sp-body">Er pågående sommarkollektion &mdash; den som redan är delvis slutsåld &mdash; lyft precis när efterfrågan toppar. Kampanjen synkar med er egen säsongscykel istället för att ligga vid sidan av den, så exponeringen landar på en produkt marknaden redan vill ha. Det förstärker ett släpp som rör på sig och fångar nya köpare innan säsongen tar slut.</p>
-        <span class="sp-tag">Säsong &middot; efterfrågan &middot; timing</span>
+        <h3>Hej Solsken när efterfrågan är het</h3>
+        <p class="sp-sub">Lyfter fram: Presentlåda SOMMAR trio</p>
+        <p class="sp-body">Er sommarkollektion lyft precis när efterfrågan toppar &mdash; med köpknappen riktad mot Presentlåda SOMMAR trio, en gåvolåda som finns i lager och bär högre ordervärde. Kampanjen synkar med er egen säsongscykel istället för att ligga vid sidan av den, så exponeringen landar på en produkt marknaden redan vill ha och som faktiskt går att lägga i varukorgen direkt.</p>
+        <span class="sp-tag">Säsong &middot; presentlåda &middot; timing</span>
       </div>
 
       <div class="sp-c rv d3">
         <p class="sp-eyebrow">Spår 03</p>
-        <h3>Såsen som öppnar butiken</h3>
-        <p class="sp-sub">Lyfter fram: Kolasås salt karamell &amp; mjukglassbaren</p>
-        <p class="sp-body">Er bästsäljande kolasås kopplad till mjukglassbaren på Nytorgsgatan. Spåret jobbar på två fronter: en lågtröskel-produkt som säljer online och en fysisk upplevelse att besöka. Det omvandlar räckvidd till både e-handelsorder och butikstrafik &mdash; den bredaste konverteringsytan av alla spåren.</p>
-        <span class="sp-tag">Sås &middot; butik &middot; konvertering</span>
+        <h3>Såsen över hemmadessert</h3>
+        <p class="sp-sub">Lyfter fram: Kolasås salt karamell (squeeze)</p>
+        <p class="sp-body">Er bästsäljande kolasås hälld över glass och efterrätt i en riktig hemmiljö &mdash; en lågtröskel-produkt som säljer i e-handeln och hamnar i varukorgen direkt. Mjukglassbaren på Nytorgsgatan får finnas med som en varm detalj i berättelsen, men köpknappen pekar hela vägen mot squeeze-flaskan online. Den bredaste konverteringsytan av alla spåren.</p>
+        <span class="sp-tag">Sås &middot; hemmadessert &middot; e-handel</span>
       </div>
 
       <div class="sp-divider rv" aria-hidden="true"></div>
@@ -1191,7 +1016,7 @@ position:relative;overflow:hidden;transition:color .35s}
         <div class="sp-wide-grid">
           <div>
             <p class="sp-eyebrow">Spår 04</p>
-            <h3>Fritt val</h3>
+            <h3>Ert upplägg</h3>
             <p class="sp-sub">Er prioritering, samma räckvidd</p>
           </div>
           <p class="sp-body">Vet ni redan vad ni vill flytta &mdash; en gåvolinje som Presentlåda SOMMAR trio för högre ordervärde, krokanten, kolakit-merchen eller en kommande höst-&nbsp;eller jullansering? Då byggs kampanjen kring den. Ni pekar på produkten med störst affärsbetydelse just nu, så formas samma upplägg runt den.</p>
@@ -1200,7 +1025,7 @@ position:relative;overflow:hidden;transition:color .35s}
       </div>
 
     </div>
-    <p class="sp-footnote rv">Varje spår står för sig själv som en enskild film, eller löper ihop till den fulla tredelade serien.</p>
+    <p class="sp-footnote rv">Varje spår kan bära videon på egen hand &mdash; eller väva ihop med de andra till en sammanhängande berättelse om Pärlans.</p>
   </div>
 </section>
 
@@ -1248,93 +1073,23 @@ position:relative;overflow:hidden;transition:color .35s}
   <div class="pr-orb pr-orb-1" aria-hidden="true"></div>
   <div class="pr-inner">
     <p class="sec-lbl rv">Investering</p>
-    <h2 class="sec-h2 rv">Två vägar att berätta <em>historien.</em></h2>
+    <h2 class="sec-h2 rv">Ett paket &mdash; <em>allt du behöver för att börja.</em></h2>
 
-    <div class="price-grid">
+    <div class="price-grid price-grid-single">
 
-      <!-- Enskild film -->
-      <div class="pkg-col rv d1" data-pkg-col="start">
-        <div class="pkg-boost" role="group" aria-pressed="false" data-pkg="start">
-          <button type="button" class="pkg-boost-head" aria-pressed="false" aria-controls="pkg-boost-body-start" aria-label="Lägg till Meta-räckvidd på Enskild film">
-            <span class="pkg-boost-switch" aria-hidden="true"></span>
-            <span class="pkg-boost-text">
-              <span class="pkg-boost-tag">Tillval &middot; <em>Rekommenderas</em></span>
-              <span class="pkg-boost-title">Lägg till Meta-räckvidd <span class="pkg-boost-price" data-bt-price="start">+10&nbsp;000&nbsp;kr</span></span>
-            </span>
-          </button>
-          <div class="pkg-boost-body" id="pkg-boost-body-start" aria-hidden="true">
-            <div class="pkg-boost-body-inner">
-              <p class="pkg-boost-desc" data-pkg-desc="start">Över <strong class="pkg-boost-stat" data-bt-stat="start">150&nbsp;000</strong> extra visningar! Meta-retargeting tar tillbaka tittarna med en klickbar länk PÅ själva filmen i Instagram och Facebook &mdash; ett sömlöst steg från att titta till er webbplats.</p>
-              <p class="pkg-boost-desc-zero" data-pkg-desc-zero="start" hidden>Dra reglaget till en budget nedan för att se hur många extra visningar paketet levererar.</p>
-              <div class="pkg-slider">
-                <label class="pkg-slider-lbl" for="pk-range-start">Meta-budget per produktion</label>
-                <input id="pk-range-start" class="pkg-range" type="range" min="0" max="3" step="1" value="2" data-pkg-slider="start" aria-label="Meta-budget per produktion för Enskild film"/>
-                <div class="pkg-ticks" aria-hidden="true">
-                  <span class="pkg-tick" data-pkg-tick="start" data-step="0">0 kr</span>
-                  <span class="pkg-tick" data-pkg-tick="start" data-step="1">5 000</span>
-                  <span class="pkg-tick is-active" data-pkg-tick="start" data-step="2">10 000</span>
-                  <span class="pkg-tick" data-pkg-tick="start" data-step="3">20 000</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="price-box rv" data-pkg-box="start">
-          <h3 class="price-title">Enskild film</h3>
-          <p class="price-sub">1 reklamfilm &middot; 2 stories med CTA &middot; 10 miljöbilder</p>
+      <!-- Samarbetspaket -->
+      <div class="pkg-col rv d1">
+        <div class="price-box rv">
+          <h3 class="price-title">Samarbetspaket</h3>
+          <p class="price-sub">1 video &middot; 1 story med direktlänk &middot; 10 miljöbilder</p>
           <p class="price-total-lbl">Pris</p>
-          <p class="price-total" data-base="18500" data-boost="28500">18 500</p>
-          <span class="price-unit">kr</span>
+          <p class="price-total">10 000</p>
+          <span class="price-unit">SEK &middot; exkl. moms</span>
           <div class="price-includes">
-            <p class="pi hi">1 reklamfilm publicerad i Villa Sjöviks kanaler</p>
-            <p class="pi hi">2 stories med direktlänk och CTA</p>
+            <p class="pi hi">1 video i UGC-stil (autentisk, vardagsnära), publicerad i Villa Sjöviks kanaler</p>
+            <p class="pi hi">1 story med direktlänk</p>
             <p class="pi hi">10 miljöbilder i autentisk hemmiljö</p>
-            <p class="pi">Återanvändbar som annonsmaterial i era egna kanaler</p>
-            <p class="pi">Styling, filmning och redigering ingår</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Kampanjpaket (featured) -->
-      <div class="pkg-col featured rv d2" data-pkg-col="season">
-        <div class="pkg-boost" role="group" aria-pressed="false" data-pkg="season">
-          <button type="button" class="pkg-boost-head" aria-pressed="false" aria-controls="pkg-boost-body-season" aria-label="Lägg till Meta-räckvidd på Kampanjpaket">
-            <span class="pkg-boost-switch" aria-hidden="true"></span>
-            <span class="pkg-boost-text">
-              <span class="pkg-boost-tag">Tillval &middot; <em>Rekommenderas</em></span>
-              <span class="pkg-boost-title">Lägg till Meta-räckvidd <span class="pkg-boost-price" data-bt-price="season">+30&nbsp;000&nbsp;kr</span></span>
-            </span>
-          </button>
-          <div class="pkg-boost-body" id="pkg-boost-body-season" aria-hidden="true">
-            <div class="pkg-boost-body-inner">
-              <p class="pkg-boost-desc" data-pkg-desc="season">Alla tre filmerna får retargeting &mdash; visas igen för alla som redan tittat, över <strong class="pkg-boost-stat" data-bt-stat="season">450&nbsp;000</strong> extra visningar! Meta-retargeting tar tillbaka tittarna med en klickbar länk PÅ varje film i Instagram och Facebook &mdash; ett sömlöst steg från att titta till er webbplats.</p>
-              <p class="pkg-boost-desc-zero" data-pkg-desc-zero="season" hidden>Dra reglaget till en budget nedan för att se hur många extra visningar paketet levererar.</p>
-              <div class="pkg-slider">
-                <label class="pkg-slider-lbl" for="pk-range-season">Meta-budget per produktion</label>
-                <input id="pk-range-season" class="pkg-range" type="range" min="0" max="3" step="1" value="2" data-pkg-slider="season" aria-label="Meta-budget per produktion för Kampanjpaket"/>
-                <div class="pkg-ticks" aria-hidden="true">
-                  <span class="pkg-tick" data-pkg-tick="season" data-step="0">0 kr</span>
-                  <span class="pkg-tick" data-pkg-tick="season" data-step="1">5 000</span>
-                  <span class="pkg-tick is-active" data-pkg-tick="season" data-step="2">10 000</span>
-                  <span class="pkg-tick" data-pkg-tick="season" data-step="3">20 000</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="price-box featured rv" data-pkg-box="season">
-          <span class="price-ribbon">Rekommenderat &middot; MEST VÄRDE</span>
-          <h3 class="price-title">Kampanjpaket</h3>
-          <p class="price-sub">3 filmer &middot; 6 stories med CTA &middot; 30 miljöbilder</p>
-          <p class="price-total-lbl">Pris</p>
-          <p class="price-orig" data-base="ord. 55 500 kr" data-boost="ord. 85 500 kr">ord. 55 500 kr</p>
-          <p class="price-total" data-base="39000" data-boost="69000">39 000</p>
-          <span class="price-unit">kr</span>
-          <div class="price-includes">
-            <p class="pi hi">Alla tre filmerna &mdash; hela berättelsen om Pärlans</p>
-            <p class="pi hi">6 stories med direktlänk och CTA</p>
-            <p class="pi hi">30 miljöbilder i autentisk hemmiljö</p>
-            <p class="pi">Återanvändbar som annonsmaterial i era egna kanaler</p>
+            <p class="pi">Full nyttjanderätt till allt material</p>
             <p class="pi">Styling, filmning och redigering ingår</p>
           </div>
         </div>
@@ -1962,231 +1717,6 @@ if(spotSec){
       else if(rail.getBoundingClientRect().top<window.innerHeight && rail.getBoundingClientRect().bottom>0) start();
     });
   });
-})();
-
-/* === PER-CARD PKG-BOOST (Meta-räckvidd per paket) === */
-(function(){
-  const VIEWS_PER_EUR=15; // views per SEK of Meta budget (10 000 kr -> 150 000 views)
-
-  function fmt(n){return Math.round(n).toLocaleString('sv-SE')}
-  function fmtThin(n){return Math.round(n).toLocaleString('sv-SE').replace(/\s/g,' ')}
-  function animateNumber(el,from,to,duration,formatter){
-    const fmtFn=formatter||fmt;
-    const start=performance.now();
-    function tick(now){
-      const t=Math.min((now-start)/duration,1);
-      const eased=1-Math.pow(1-t,3);
-      el.textContent=fmtFn(from+(to-from)*eased);
-      if(t<1)requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  }
-
-  // Step values (SEK per production): 0 -> 0 kr, 1 -> 5 000, 2 -> 10 000, 3 -> 20 000
-  const STEP_VALUES=[0,5000,10000,20000];
-  const cardBudget={start:10000, season:10000};
-  const PKG_MULT={start:1, season:3};
-
-  function stepFromBudget(b){
-    let idx=STEP_VALUES.indexOf(b);
-    if(idx>=0) return idx;
-    let best=0, bestDiff=Infinity;
-    for(let i=0;i<STEP_VALUES.length;i++){
-      const d=Math.abs(STEP_VALUES[i]-b);
-      if(d<bestDiff){bestDiff=d;best=i;}
-    }
-    return best;
-  }
-  function boostCostForCard(pkg){return cardBudget[pkg]*PKG_MULT[pkg];}
-  function viewsForCard(pkg){return cardBudget[pkg]*VIEWS_PER_EUR*PKG_MULT[pkg];}
-
-  function refreshCard(pkg,opts){
-    const col=document.querySelector('[data-pkg-col="'+pkg+'"]');
-    if(!col)return;
-    const box=col.querySelector('[data-pkg-box="'+pkg+'"]');
-    const total=box && box.querySelector('.price-total[data-base][data-boost]');
-    const orig=box && box.querySelector('.price-orig[data-base][data-boost]');
-    const priceLbl=col.querySelector('[data-bt-price="'+pkg+'"]');
-    const statLbl=col.querySelector('[data-bt-stat="'+pkg+'"]');
-    const btn=col.querySelector('.pkg-boost');
-    const slider=col.querySelector('[data-pkg-slider="'+pkg+'"]');
-    const ticks=col.querySelectorAll('[data-pkg-tick="'+pkg+'"]');
-    if(!total)return;
-
-    const isOn=btn && btn.getAttribute('aria-pressed')==='true';
-    const cost=boostCostForCard(pkg);
-
-    const base=+total.dataset.base;
-    const newBoost=base+cost;
-    total.dataset.boost=newBoost;
-    if(orig){
-      const origBaseNum=parseInt(orig.dataset.base.replace(/[^\d]/g,''),10);
-      const origBoostNum=origBaseNum+cost;
-      orig.dataset.boost='reg. '+fmt(origBoostNum)+' kr';
-    }
-
-    if(priceLbl){
-      if(cost===0){
-        priceLbl.innerHTML='+0&nbsp;kr';
-        priceLbl.classList.add('is-zero');
-      }else{
-        priceLbl.innerHTML='+'+fmtThin(cost)+'&nbsp;kr';
-        priceLbl.classList.remove('is-zero');
-      }
-    }
-    const desc=col.querySelector('[data-pkg-desc="'+pkg+'"]');
-    const descZero=col.querySelector('[data-pkg-desc-zero="'+pkg+'"]');
-    const views=viewsForCard(pkg);
-    if(views===0){
-      if(desc) desc.hidden=true;
-      if(descZero) descZero.hidden=false;
-    }else{
-      if(desc) desc.hidden=false;
-      if(descZero) descZero.hidden=true;
-      if(statLbl) statLbl.innerHTML=fmtThin(views);
-    }
-
-    if(slider){
-      const step=stepFromBudget(cardBudget[pkg]);
-      if(!(opts&&opts.skipSlider)){slider.value=step;}
-      const pct=(step/3)*100;
-      slider.style.setProperty('--pk-fill',pct+'%');
-      ticks.forEach(t=>{t.classList.toggle('is-active', +t.dataset.step===step);});
-    }
-
-    if(isOn){
-      const currentDisplayed=parseInt(total.textContent.replace(/[^\d]/g,''),10);
-      const target=base+cost;
-      if(currentDisplayed!==target){
-        animateNumber(total,currentDisplayed,target,420);
-        total.classList.remove('boost-pulse');void total.offsetWidth;total.classList.add('boost-pulse');
-      }
-      if(orig){orig.textContent= cost===0 ? orig.dataset.base : orig.dataset.boost;}
-    }else{
-      if(total.textContent.replace(/[^\d]/g,'')!==String(base)){total.textContent=fmt(base);}
-      if(orig){orig.textContent=orig.dataset.base;}
-    }
-  }
-
-  function setCardBudget(pkg,sek,opts){
-    cardBudget[pkg]=sek;
-    refreshCard(pkg,opts);
-  }
-
-  // Wire toggles — click on .pkg-boost-head toggles the wrapper
-  document.querySelectorAll('.pkg-boost-head').forEach(headBtn=>{
-    const wrapper=headBtn.closest('.pkg-boost');
-    if(!wrapper)return;
-    const pkg=wrapper.dataset.pkg;
-    if(!pkg)return;
-    headBtn.addEventListener('click',()=>{
-      const wasActive=wrapper.getAttribute('aria-pressed')==='true';
-      const next=!wasActive;
-      wrapper.setAttribute('aria-pressed',next?'true':'false');
-      headBtn.setAttribute('aria-pressed',next?'true':'false');
-      const body=wrapper.querySelector('.pkg-boost-body');
-      if(body) body.setAttribute('aria-hidden',next?'false':'true');
-
-      const col=document.querySelector('[data-pkg-col="'+pkg+'"]');
-      const total=col && col.querySelector('.price-total[data-base][data-boost]');
-      if(total){
-        const base=+total.dataset.base, boost=+total.dataset.boost;
-        const from=next?base:boost, to=next?boost:base;
-        if(from!==to){
-          animateNumber(total,from,to,720);
-          total.classList.remove('boost-pulse');void total.offsetWidth;total.classList.add('boost-pulse');
-        }
-        const orig=col.querySelector('.price-orig[data-base][data-boost]');
-        if(orig){
-          orig.textContent=next?orig.dataset.boost:orig.dataset.base;
-          orig.classList.remove('boost-pulse');void orig.offsetWidth;orig.classList.add('boost-pulse');
-        }
-      }
-      refreshCard(pkg);
-    });
-  });
-
-  // Wire per-card sliders
-  document.querySelectorAll('[data-pkg-slider]').forEach(slider=>{
-    const pkg=slider.dataset.pkgSlider;
-    slider.addEventListener('input',e=>{
-      const step=+e.target.value;
-      const sek=STEP_VALUES[step]||0;
-      setCardBudget(pkg,sek,{skipSlider:true});
-    });
-    slider.addEventListener('click',e=>e.stopPropagation());
-    slider.addEventListener('mousedown',e=>e.stopPropagation());
-    slider.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});
-    slider.addEventListener('keydown',e=>e.stopPropagation());
-  });
-
-  // Wire tick labels — clickable to jump to step
-  document.querySelectorAll('[data-pkg-tick]').forEach(tick=>{
-    tick.addEventListener('click',e=>{
-      e.stopPropagation();
-      const pkg=tick.dataset.pkgTick;
-      const step=+tick.dataset.step;
-      setCardBudget(pkg,STEP_VALUES[step]||0);
-    });
-  });
-
-  // Initial render
-  refreshCard('start');
-  refreshCard('season');
-})();
-
-/* META-RÄCKVIDD AUTO-AKTIVERING — Kampanjpaket (featured) togglar ON automatiskt
-   när investerings-sektionen står stilla i view en kort stund. */
-(function(){
-  const sec=document.getElementById('sec-pr');
-  const wrap=document.querySelector('.pkg-col.featured .pkg-boost');
-  const btn=wrap&&wrap.querySelector('.pkg-boost-head');
-  if(!sec||!wrap||!btn)return;
-
-  try{if(sessionStorage.getItem('parlans-konfektyr-boost-autoactivated')==='true')return}catch(e){}
-  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-
-  const DELAY_MS=1800;
-  const HOLD_MS=2600;
-  const VIEW_THRESHOLD=0.45;
-
-  let triggered=false,demoActive=false,demoInternal=false,viewTimer=null;
-  const tids=[];
-  function clearTids(){tids.forEach(id=>clearTimeout(id));tids.length=0;}
-  function endDemo(){demoActive=false;try{sessionStorage.setItem('parlans-konfektyr-boost-autoactivated','true')}catch(e){}}
-
-  // Avbryt demon om besökaren själv klickar på reglaget
-  btn.addEventListener('click',()=>{if(demoActive&&!demoInternal){clearTids();endDemo();}});
-
-  const obs=new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(triggered)return;
-      if(e.isIntersecting){
-        if(viewTimer===null){
-          viewTimer=setTimeout(()=>{
-            viewTimer=null;
-            if(triggered)return;
-            if(wrap.getAttribute('aria-pressed')==='true'){triggered=true;return;}
-            triggered=true;
-            obs.unobserve(sec);
-            demoActive=true;
-            demoInternal=true;btn.click();demoInternal=false;
-            tids.push(setTimeout(()=>{
-              if(!demoActive)return;
-              if(wrap.getAttribute('aria-pressed')==='true'){
-                demoInternal=true;btn.click();demoInternal=false;
-              }
-              tids.push(setTimeout(endDemo,400));
-            },HOLD_MS));
-          },DELAY_MS);
-        }
-      }else{
-        if(viewTimer!==null){clearTimeout(viewTimer);viewTimer=null;}
-      }
-    });
-  },{threshold:VIEW_THRESHOLD});
-
-  obs.observe(sec);
 })();
 
 /* BOKNINGSFLOW */
